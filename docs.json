@@ -8,8 +8,8 @@
     "dark": "#5344c4"
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg",
+    "light": "/logo/Icon.png",
+    "dark": "/logo/Icon.png",
     "href": "https://app.credentialsportal.com"
   },
   "favicon": "/favicon.svg",
