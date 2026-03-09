@@ -12,7 +12,7 @@
     "dark": "/logo/Icon.png",
     "href": "https://app.credentialsportal.com"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "topbarLinks": [
     {
       "name": "Sign In",
