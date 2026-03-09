@@ -1,0 +1,109 @@
+---
+title: Broadcasts
+description: Send district-wide announcements to role groups via the API.
+---
+
+Broadcasts are one-way announcements sent to all people with a specific role. Recipients are notified via email and push notification (based on their preferences).
+
+<Note>
+Requires the **Broadcasts** permission (`g: 1`) on the caller's role.
+</Note>
+
+## List broadcasts
+
+```bash
+GET /api/broadcasts
+```
+
+Returns all broadcasts sent from your district, most recent first.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/broadcasts \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+[
+  {
+    "id": "brd01",
+    "district_id": "xyz99",
+    "sender_id": "abc12",
+    "role_id": "1c",
+    "subject": "District Assembly Reminder",
+    "body": "<p>Please join us for District Assembly on March 15...</p>",
+    "recipient_count": 12,
+    "created_at": 1741564800000
+  }
+]
+```
+
+---
+
+## Send a broadcast
+
+```bash
+POST /api/broadcasts
+```
+
+**Request body:**
+
+<ParamField body="role_id" type="string" required>
+  The role ID of the recipients. All people assigned this role will receive the broadcast.
+</ParamField>
+
+<ParamField body="subject" type="string" required>
+  The broadcast subject line (used in email delivery).
+</ParamField>
+
+<ParamField body="body" type="string" required>
+  The broadcast body. Supports HTML markup.
+</ParamField>
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/broadcasts \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "role_id": "1c",
+    "subject": "Interview Schedule Update",
+    "body": "<p>Board interviews are scheduled for April 5. Please confirm your attendance.</p>"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "brd02",
+  "district_id": "xyz99",
+  "sender_id": "abc12",
+  "role_id": "1c",
+  "subject": "Interview Schedule Update",
+  "body": "<p>Board interviews are scheduled for April 5. Please confirm your attendance.</p>",
+  "recipient_count": 8,
+  "created_at": 1741564800000
+}
+```
+
+---
+
+## Get broadcasts for a person
+
+```bash
+GET /api/broadcasts/people/:id
+```
+
+Returns all broadcasts received by a specific person.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/broadcasts/people/def34 \
+  -H "Authorization: Bearer ck_your_api_key"
+```

@@ -1,0 +1,104 @@
+---
+title: Roles & Permissions
+description: Create and customize roles to control what each person can see and do in your district.
+---
+
+Roles define what people can access in Credentials Portal. Every person in your district is assigned one or more roles, and the role's permissions determine what they can see and do.
+
+[Screenshot: Roles settings page showing default roles with their permission flags]
+
+## Default roles
+
+Your district comes with four default roles:
+
+| Role | Key permissions |
+|------|----------------|
+| **Admin** | Full access: manage people, settings, roles, interviews, broadcasts, and billing |
+| **Credentials Board** | Create and edit interviews; assigned to specific boards |
+| **Mentor** | View published interviews for assigned candidates |
+| **Candidate** | View their own published interviews and progress |
+
+## Permission flags
+
+Each role is configured with a combination of permission flags:
+
+| Flag | Description |
+|------|-------------|
+| **People (view)** | See the people directory |
+| **People (edit)** | Add, edit, and delete people |
+| **Interviews (view)** | View interview records |
+| **Interviews (edit)** | Create and edit interview records |
+| **Mentor** | Treated as a mentor; can view mentee data |
+| **Candidate** | Treated as a candidate; limited to own data |
+| **Board** | Board member; assigned to specific boards |
+| **Broadcasts** | Send district-wide broadcast messages |
+| **Settings** | Edit district configuration |
+| **Roles** | Create and modify roles |
+| **Billing** | View and manage subscription |
+
+## Create a custom role
+
+<Steps>
+  <Step title="Open Settings">
+    Go to **Settings** → **Roles**.
+
+    [Screenshot: Settings navigation with Roles highlighted]
+  </Step>
+  <Step title="Add a new role">
+    Click **+ Add Role** and enter a name for the role.
+
+    [Screenshot: Add Role button and name input]
+  </Step>
+  <Step title="Configure permissions">
+    Toggle the permission flags that apply to this role.
+
+    [Screenshot: Permission flag toggles for a new custom role]
+  </Step>
+  <Step title="Save">
+    Click **Save Role**.
+  </Step>
+</Steps>
+
+## Edit an existing role
+
+Click any role's name in the Roles list to open its settings. Adjust the name or permissions and click **Save**.
+
+<Warning>
+Changing a role's permissions immediately affects everyone assigned that role. Review the impact before saving.
+</Warning>
+
+## Assign a role to a person
+
+Roles are assigned on each person's profile. See [Managing People](/help/admin/people) for instructions.
+
+A person can have **multiple roles** — for example, someone might be both a Board Member and a Mentor. The app uses the highest-permission role when determining access.
+
+## Custom fields per role
+
+You can define custom profile fields for specific roles. For example, you might add a "License Number" field that only appears on Candidate profiles.
+
+<Steps>
+  <Step title="Open a role's settings">
+    Go to **Settings** → **Roles** and click a role.
+  </Step>
+  <Step title="Add a custom field">
+    In the **Custom Fields** section, click **+ Add Field**. Choose a field type:
+    - **Short text** — Single-line text
+    - **Long text** — Multi-line text
+    - **Checkbox** — Yes/no toggle
+    - **Select** — Dropdown with configurable options
+
+    [Screenshot: Custom field type selector]
+  </Step>
+  <Step title="Configure and save">
+    Name the field and save. It will appear on the profile of anyone assigned that role.
+  </Step>
+</Steps>
+
+## Delete a role
+
+Open the role in Settings → Roles and click **Delete Role**.
+
+<Warning>
+Deleting a role removes it from all people who have it assigned. Verify assignments before deleting.
+</Warning>

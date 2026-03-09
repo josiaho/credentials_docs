@@ -1,0 +1,151 @@
+---
+title: Files
+description: List and manage uploaded files in your district via the API.
+---
+
+Files in Credentials Portal are attached to individual people. They are stored securely and served through authenticated proxy routes.
+
+## List all district files
+
+```bash
+GET /api/files
+```
+
+Returns metadata for all files uploaded in your district.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/files \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+[
+  {
+    "id": "upl01",
+    "district_id": "xyz99",
+    "person_id": "abc12",
+    "name": "Background Check",
+    "filename": "background-check.pdf",
+    "content_type": "application/pdf",
+    "size": 204800,
+    "url": "https://app.credentialsportal.com/files/xyz99/upload/abc12/background-check.pdf",
+    "created_at": 1739577600000
+  }
+]
+```
+
+---
+
+## Upload a file
+
+```bash
+POST /api/upload
+```
+
+Uploads a file to the district's storage and associates it with a person.
+
+**Form data:**
+
+| Field | Description |
+|-------|-------------|
+| `file` | The file to upload (multipart) |
+| `personId` | The person to associate the file with |
+| `name` | Display name for the file (optional) |
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/upload \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -F "file=@/path/to/document.pdf" \
+  -F "personId=abc12" \
+  -F "name=Background Check"
+```
+
+**Response:**
+
+```json
+{
+  "id": "upl02",
+  "person_id": "abc12",
+  "name": "Background Check",
+  "filename": "document.pdf",
+  "content_type": "application/pdf",
+  "size": 204800,
+  "url": "https://app.credentialsportal.com/files/xyz99/upload/abc12/document.pdf",
+  "created_at": 1741564800000
+}
+```
+
+---
+
+## Upload a file for a specific person
+
+```bash
+POST /api/people/:id/uploads
+```
+
+Equivalent to the upload endpoint above, scoped to a specific person.
+
+---
+
+## Update file metadata
+
+```bash
+PATCH /api/files/:uploadId
+```
+
+Update a file's name or reassign it to a different person.
+
+**Request body:**
+
+<ParamField body="name" type="string">
+  New display name for the file.
+</ParamField>
+
+<ParamField body="person_id" type="string">
+  Reassign the file to a different person.
+</ParamField>
+
+---
+
+## Delete a file
+
+```bash
+DELETE /api/people/:personId/uploads/:uploadId
+```
+
+Permanently deletes the file from storage.
+
+**Example:**
+
+```bash
+curl -X DELETE https://app.credentialsportal.com/api/people/abc12/uploads/upl02 \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{ "ok": true }
+```
+
+---
+
+## Access file content
+
+Files are served via an authenticated proxy route:
+
+```
+GET /files/:districtId/:type/:personId/:filename
+```
+
+The `url` field returned in file responses points to this route. Include your session token or API key to access protected files.
+
+<Note>
+File URLs are not publicly accessible. All requests to file URLs must include a valid `Authorization` header.
+</Note>

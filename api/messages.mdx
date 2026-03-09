@@ -1,0 +1,181 @@
+---
+title: Messages
+description: Create and manage direct message and group conversations via the API.
+---
+
+Conversations in Credentials Portal support direct messages (1-on-1) and group conversations. Messages are real-time and support automatic translation.
+
+## List conversations
+
+```bash
+GET /api/messages
+```
+
+Returns all conversations for the authenticated user.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/messages \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+[
+  {
+    "id": "conv01",
+    "district_id": "xyz99",
+    "participants": ["abc12", "def34"],
+    "last_message": {
+      "id": "msg05",
+      "body": "See you at the meeting.",
+      "sender_id": "abc12",
+      "created_at": 1741564800000
+    },
+    "unread": 0,
+    "created_at": 1739577600000
+  }
+]
+```
+
+---
+
+## Create a conversation
+
+```bash
+POST /api/messages
+```
+
+**Request body:**
+
+<ParamField body="participants" type="array" required>
+  Array of person IDs to include in the conversation. Include at least one other person besides the sender.
+</ParamField>
+
+<ParamField body="body" type="string" required>
+  The opening message text.
+</ParamField>
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/messages \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "participants": ["def34"],
+    "body": "Hi John, looking forward to your interview next week."
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "conv02",
+  "district_id": "xyz99",
+  "participants": ["abc12", "def34"],
+  "created_at": 1741564800000
+}
+```
+
+---
+
+## Get a conversation
+
+```bash
+GET /api/messages/:id
+```
+
+Returns conversation details and all messages. Messages from others are automatically translated to the authenticated user's language.
+
+**Response:**
+
+```json
+{
+  "id": "conv02",
+  "participants": ["abc12", "def34"],
+  "messages": [
+    {
+      "id": "msg01",
+      "sender_id": "abc12",
+      "body": "Hi John, looking forward to your interview next week.",
+      "reactions": {},
+      "created_at": 1741564800000
+    }
+  ]
+}
+```
+
+---
+
+## Send a message
+
+```bash
+POST /api/messages/:id
+```
+
+Sends a message to an existing conversation.
+
+**Request body:**
+
+<ParamField body="body" type="string" required>
+  The message text.
+</ParamField>
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/messages/conv02 \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{ "body": "Please bring your completed quiz form." }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "msg02",
+  "sender_id": "abc12",
+  "body": "Please bring your completed quiz form.",
+  "reactions": {},
+  "created_at": 1741564900000
+}
+```
+
+---
+
+## Add a reaction
+
+```bash
+POST /api/messages/:id/react
+```
+
+Adds an emoji reaction to a message in the conversation.
+
+**Request body:**
+
+<ParamField body="messageId" type="string" required>
+  The ID of the message to react to.
+</ParamField>
+
+<ParamField body="emoji" type="string" required>
+  The emoji character (e.g., `"👍"`).
+</ParamField>
+
+---
+
+## Leave a conversation
+
+```bash
+DELETE /api/messages/:id
+```
+
+Removes the authenticated user from a group conversation.
+
+<Note>
+You cannot leave direct (1-on-1) conversations — only group conversations with 3 or more participants.
+</Note>

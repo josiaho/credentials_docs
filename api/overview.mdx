@@ -1,0 +1,83 @@
+---
+title: API Overview
+description: Introduction to the Credentials Portal REST API — base URL, conventions, rate limits, and errors.
+---
+
+The Credentials Portal API gives you programmatic access to your district's data. Use it to build integrations, automate workflows, or connect external reporting tools.
+
+<Note>
+The API is scoped to your district. You can only read and write data within the district associated with your API key or session token.
+</Note>
+
+## Base URL
+
+```
+https://app.credentialsportal.com/api
+```
+
+All endpoints are relative to this base URL.
+
+## Authentication
+
+All API requests require authentication via a Bearer token. See [Authentication](/api/authentication) for details on session tokens and API keys.
+
+```http
+Authorization: Bearer <your_token_or_api_key>
+```
+
+## Request format
+
+- **Content-Type**: `application/json` for all request bodies
+- **Date format**: Unix timestamps in milliseconds (e.g., `1709942400000`) for date fields returned by the API; ISO 8601 strings (e.g., `2026-02-15`) for date input fields
+
+## Response format
+
+All responses are JSON. Successful responses return the requested data. Error responses follow a consistent structure:
+
+```json
+{
+  "error": "A human-readable error message"
+}
+```
+
+## HTTP status codes
+
+| Code | Meaning |
+|------|---------|
+| `200` | Success |
+| `201` | Created |
+| `400` | Bad request — check your request body |
+| `401` | Unauthorized — missing or invalid token |
+| `403` | Forbidden — your role doesn't have permission for this action |
+| `404` | Not found |
+| `402` | Payment required — trial expired or subscription inactive |
+| `500` | Internal server error |
+
+## Multilingual fields
+
+Many fields in the API return multilingual objects — a JSON object where keys are language codes and values are the translated strings:
+
+```json
+{
+  "name": {
+    "en": "Ministerial Track",
+    "es": "Camino Ministerial"
+  }
+}
+```
+
+When writing to multilingual fields, include the language code as the key:
+
+```json
+{
+  "name": { "en": "My Custom Role" }
+}
+```
+
+## Pagination
+
+List endpoints return all records by default. For large districts, responses may be large — plan accordingly.
+
+## API support
+
+Questions about the API? Email [api@credentialsportal.com](mailto:api@credentialsportal.com).

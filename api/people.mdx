@@ -1,0 +1,250 @@
+---
+title: People
+description: List, create, update, and delete people in your district via the API.
+---
+
+People are the members of your district — candidates, mentors, board members, and administrators.
+
+## List people
+
+```bash
+GET /api/people
+```
+
+Returns all active people in your district.
+
+**Query parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `archived` | boolean | Set to `true` to include archived people |
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/people \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+[
+  {
+    "id": "abc12",
+    "first": "Jane",
+    "last": "Doe",
+    "email": "jane@example.com",
+    "language": "en",
+    "roles": { "1c": 1 },
+    "tags": ["1a"],
+    "archived": 0,
+    "avatar_url": null,
+    "district_id": "xyz99",
+    "created_at": 1709942400000
+  }
+]
+```
+
+---
+
+## Get a person
+
+```bash
+GET /api/people/:id
+```
+
+**Query parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `include` | string | Comma-separated list: `files`, `interviews`, `tags`, `photo_url` |
+
+**Example:**
+
+```bash
+curl "https://app.credentialsportal.com/api/people/abc12?include=files,interviews" \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{
+  "id": "abc12",
+  "first": "Jane",
+  "last": "Doe",
+  "email": "jane@example.com",
+  "language": "en",
+  "roles": { "1c": 1 },
+  "tags": ["1a"],
+  "archived": 0,
+  "avatar_url": "https://...",
+  "district_id": "xyz99",
+  "created_at": 1709942400000,
+  "files": [...],
+  "interviews": [...]
+}
+```
+
+---
+
+## Create a person
+
+```bash
+POST /api/people
+```
+
+Requires **People (edit)** permission.
+
+**Request body:**
+
+<ParamField body="first" type="string" required>
+  First name
+</ParamField>
+
+<ParamField body="last" type="string" required>
+  Last name
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Email address (must be unique within the district)
+</ParamField>
+
+<ParamField body="language" type="string">
+  BCP 47 language code (default: `"en"`)
+</ParamField>
+
+<ParamField body="roles" type="object">
+  Role assignments as `{ roleId: 1 }` (1 = primary, 2 = secondary)
+</ParamField>
+
+<ParamField body="tags" type="array">
+  Array of tag IDs
+</ParamField>
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/people \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first": "John",
+    "last": "Smith",
+    "email": "john@example.com",
+    "language": "en",
+    "roles": { "1c": 1 }
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "def34",
+  "first": "John",
+  "last": "Smith",
+  "email": "john@example.com",
+  "language": "en",
+  "roles": { "1c": 1 },
+  "tags": [],
+  "archived": 0,
+  "district_id": "xyz99",
+  "created_at": 1709942400000
+}
+```
+
+---
+
+## Update a person
+
+```bash
+PATCH /api/people/:id
+```
+
+Requires **People (edit)** permission. Send only the fields you want to change.
+
+**Example — update roles and add a tag:**
+
+```bash
+curl -X PATCH https://app.credentialsportal.com/api/people/def34 \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "roles": { "1b": 1, "1c": 1 },
+    "tags": ["1a"]
+  }'
+```
+
+---
+
+## Delete a person
+
+```bash
+DELETE /api/people/:id
+```
+
+Requires **People (edit)** permission. This permanently deletes the person and all their associated data.
+
+<Warning>
+Deletion is permanent. Archive people instead of deleting them if you may need their records.
+</Warning>
+
+---
+
+## Send an invitation
+
+```bash
+POST /api/people/:id/invite
+```
+
+Sends a login invitation email to the person.
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/people/def34/invite \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{ "ok": true }
+```
+
+---
+
+## List files for a person
+
+```bash
+GET /api/people/:id/uploads
+```
+
+Returns all files uploaded for this person.
+
+---
+
+## Upload a file for a person
+
+```bash
+POST /api/people/:id/uploads
+```
+
+Multipart form data upload.
+
+**Form fields:**
+
+| Field | Description |
+|-------|-------------|
+| `file` | The file to upload |
+| `name` | Display name for the file |
+
+---
+
+## Delete a file
+
+```bash
+DELETE /api/people/:id/uploads/:uploadId
+```

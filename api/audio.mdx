@@ -1,0 +1,168 @@
+---
+title: Audio
+description: Upload, finalize, transcribe, and summarize interview audio recordings via the API.
+---
+
+The audio endpoints handle interview recording in three steps: uploading chunks in real time, finalizing the chunks into a single file, and then transcribing or summarizing the result.
+
+<Note>
+Audio recording is typically handled by the Credentials Portal web app. These endpoints are documented for advanced integrations.
+</Note>
+
+## Upload an audio chunk
+
+```bash
+POST /api/audio/capture
+```
+
+Uploads a chunk of audio data. Audio is recorded in chunks to support long recordings.
+
+**Form data:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `audio` | file | The audio chunk (WebM or supported format) |
+| `recordingId` | string | Unique ID for this recording session |
+| `chunkNumber` | integer | Sequential chunk number (starting at 1) |
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/audio/capture \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -F "audio=@chunk-001.webm" \
+  -F "recordingId=rec-abc123" \
+  -F "chunkNumber=1"
+```
+
+**Response:**
+
+```json
+{ "ok": true, "chunk": 1 }
+```
+
+---
+
+## Finalize a recording
+
+```bash
+POST /api/audio/finalize
+```
+
+Combines all uploaded chunks into a single audio file, stores it in the district's file storage, and attaches it to the interview record.
+
+**Request body:**
+
+<ParamField body="recordingId" type="string" required>
+  The recording session ID used when uploading chunks.
+</ParamField>
+
+<ParamField body="personId" type="string" required>
+  The person (candidate) ID this recording belongs to.
+</ParamField>
+
+<ParamField body="interviewId" type="string" required>
+  The interview record ID to attach the audio to.
+</ParamField>
+
+<ParamField body="name" type="object" required>
+  Display name for the recording: `{ "en": "Interview recording" }`
+</ParamField>
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/audio/finalize \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "recordingId": "rec-abc123",
+    "personId": "abc12",
+    "interviewId": "int01",
+    "name": { "en": "Board interview recording" }
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "ok": true,
+  "recordingId": "rec-abc123",
+  "url": "https://app.credentialsportal.com/files/xyz99/audio/abc12/rec-abc123.webm"
+}
+```
+
+---
+
+## Transcribe audio
+
+```bash
+POST /api/audio/transcribe
+```
+
+Transcribes audio using AI speech-to-text (Whisper). Language is detected automatically.
+
+**Request body:**
+
+<ParamField body="url" type="string" required>
+  The URL of the audio file to transcribe (must be accessible to the server).
+</ParamField>
+
+<ParamField body="personId" type="string" required>
+  The person ID (used to store the transcript on the interview record).
+</ParamField>
+
+<ParamField body="interviewId" type="string" required>
+  The interview ID to store the transcript on.
+</ParamField>
+
+<ParamField body="recordingId" type="string" required>
+  The recording ID to store the transcript under.
+</ParamField>
+
+**Response:**
+
+```json
+{
+  "ok": true,
+  "transcript": "The candidate began by sharing their calling to ministry..."
+}
+```
+
+---
+
+## Summarize a transcript
+
+```bash
+POST /api/audio/summarize
+```
+
+Generates an AI summary of a transcript.
+
+**Request body:**
+
+<ParamField body="transcript" type="string" required>
+  The full transcript text to summarize.
+</ParamField>
+
+<ParamField body="personId" type="string" required>
+  The person ID.
+</ParamField>
+
+<ParamField body="interviewId" type="string" required>
+  The interview ID to store the summary on.
+</ParamField>
+
+<ParamField body="recordingId" type="string" required>
+  The recording ID to store the summary under.
+</ParamField>
+
+**Response:**
+
+```json
+{
+  "ok": true,
+  "summary": "The candidate demonstrated strong theological knowledge and a clear sense of calling. The committee noted areas for growth in pastoral care and public communication."
+}
+```

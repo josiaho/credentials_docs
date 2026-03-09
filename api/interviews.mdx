@@ -1,0 +1,235 @@
+---
+title: Interviews
+description: Create, retrieve, update, and publish interview records via the API.
+---
+
+Interviews capture a candidate's board meeting — form responses, audio recordings, file attachments, and the board's recommendation.
+
+## List interviews
+
+```bash
+GET /api/interviews
+```
+
+Returns interviews based on the caller's role:
+- **Admin / Board**: all interviews in the district
+- **Mentor**: published interviews for assigned candidates
+- **Candidate**: their own published interviews
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/interviews \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+[
+  {
+    "id": "int01",
+    "person_id": "abc12",
+    "district_id": "xyz99",
+    "date": "2026-02-15",
+    "board_id": "1a",
+    "form_id": "1a",
+    "profile_id": "1a",
+    "published": 1,
+    "created_at": 1739577600000,
+    "updated_at": 1739577600000
+  }
+]
+```
+
+---
+
+## List interviews for a person
+
+```bash
+GET /api/interviews/:personId
+```
+
+Returns all interviews for a specific person (subject to role-based access).
+
+---
+
+## Get an interview
+
+```bash
+GET /api/interviews/:personId/:id
+```
+
+Returns the full interview record including form responses and audio.
+
+<Note>
+Private form fields (marked `p: 1`) are filtered out for candidates and mentors. Only admins and board members see private fields.
+</Note>
+
+**Response:**
+
+```json
+{
+  "id": "int01",
+  "person_id": "abc12",
+  "district_id": "xyz99",
+  "date": "2026-02-15",
+  "board_id": "1a",
+  "form_id": "1a",
+  "profile_id": "1a",
+  "published": 1,
+  "responses": {
+    "1a": 1,
+    "1b": { "en": "The candidate showed great enthusiasm" },
+    "1c": { "en": "Continue studying Scripture" },
+    "1f": 1
+  },
+  "audio": {
+    "rec01": {
+      "name": { "en": "Interview recording" },
+      "url": "https://...",
+      "transcript": { "en": "Full transcript text..." },
+      "summary": { "en": "The candidate demonstrated strong theological foundations..." }
+    }
+  },
+  "created_at": 1739577600000,
+  "updated_at": 1739577600000
+}
+```
+
+---
+
+## Create an interview
+
+```bash
+POST /api/interviews/:personId
+```
+
+Requires **Interviews (edit)** permission.
+
+**Request body:**
+
+<ParamField body="date" type="string" required>
+  Interview date in `YYYY-MM-DD` format
+</ParamField>
+
+<ParamField body="board_id" type="string">
+  ID of the board conducting the interview
+</ParamField>
+
+<ParamField body="form_id" type="string">
+  ID of the interview form to use
+</ParamField>
+
+<ParamField body="profile_id" type="string">
+  ID of the interview profile to use
+</ParamField>
+
+**Example:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/interviews/abc12 \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "date": "2026-03-10",
+    "board_id": "1a",
+    "form_id": "1a",
+    "profile_id": "1a"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "int02",
+  "person_id": "abc12",
+  "district_id": "xyz99",
+  "date": "2026-03-10",
+  "board_id": "1a",
+  "form_id": "1a",
+  "profile_id": "1a",
+  "published": 0,
+  "responses": {},
+  "audio": {},
+  "created_at": 1741564800000,
+  "updated_at": 1741564800000
+}
+```
+
+---
+
+## Update an interview
+
+```bash
+PATCH /api/interviews/:personId/:id
+```
+
+Use this endpoint to save form responses, publish the interview, or update the date.
+
+**Request body:**
+
+<ParamField body="responses" type="object">
+  Form responses keyed by field ID. Values depend on field type:
+  - Dropdown: integer (option index, 1-based)
+  - Text: multilingual object `{ "en": "text" }`
+  - Checkbox: `0` or `1`
+  - File: object of file records
+</ParamField>
+
+<ParamField body="published" type="integer">
+  Set to `1` to publish the interview (makes it visible to the candidate and mentor)
+</ParamField>
+
+<ParamField body="date" type="string">
+  Update the interview date
+</ParamField>
+
+**Example — save form responses:**
+
+```bash
+curl -X PATCH https://app.credentialsportal.com/api/interviews/abc12/int02 \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "responses": {
+      "1a": 1,
+      "1b": { "en": "Excellent understanding of theology" },
+      "1c": { "en": "Develop pastoral care skills" },
+      "1f": 1
+    }
+  }'
+```
+
+**Example — publish an interview:**
+
+```bash
+curl -X PATCH https://app.credentialsportal.com/api/interviews/abc12/int02 \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{ "published": 1 }'
+```
+
+---
+
+## Delete an interview
+
+```bash
+DELETE /api/interviews/:personId/:id
+```
+
+Requires **Interviews (edit)** permission. Permanently deletes the interview and all its responses, audio, and attachments.
+
+**Example:**
+
+```bash
+curl -X DELETE https://app.credentialsportal.com/api/interviews/abc12/int02 \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{ "ok": true }
+```

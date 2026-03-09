@@ -1,0 +1,74 @@
+---
+title: Google Sheets Integration
+description: Sync your district data to a Google Sheet for reporting and analysis.
+---
+
+The Google Sheets integration lets you export your district's data to a Google Spreadsheet at any time. Data syncs across five tabs: People, Interviews, Courses, Boards, and Tracks.
+
+[Screenshot: Google Sheets integration settings page showing the connected Google account and last sync time]
+
+## Connect your Google account
+
+<Steps>
+  <Step title="Go to Settings → Data → Google Sheets">
+    Navigate to the Google Sheets section in your Settings.
+
+    [Screenshot: Settings navigation with the Google Sheets section highlighted]
+  </Step>
+  <Step title="Connect Google">
+    Click **Connect Google Account**. You'll be redirected to Google's authorization page.
+
+    [Screenshot: Connect Google Account button]
+  </Step>
+  <Step title="Authorize access">
+    Sign in to the Google account you want to use and grant Credentials Portal permission to access Google Drive and Sheets.
+
+    [Screenshot: Google OAuth consent screen]
+  </Step>
+  <Step title="Return to Settings">
+    After authorizing, you'll be redirected back to Credentials Portal with your Google account connected.
+  </Step>
+</Steps>
+
+## Choose or create a spreadsheet
+
+<Steps>
+  <Step title="Select a spreadsheet">
+    After connecting, click **Choose Sheet** to open the Google Drive file picker. Select an existing spreadsheet or create a new one.
+
+    [Screenshot: Google Drive file picker modal]
+  </Step>
+  <Step title="Confirm">
+    The selected spreadsheet name and ID appear in your settings.
+  </Step>
+</Steps>
+
+## Sync data
+
+Once a spreadsheet is selected, click **Sync Now** to push your current district data to Google Sheets.
+
+[Screenshot: Sync Now button with a last synced timestamp]
+
+The sync updates (or creates) five tabs in your spreadsheet:
+
+| Tab | Contents |
+|-----|---------|
+| **People** | All active people with their roles, tracks, tags, and custom fields |
+| **Interviews** | All interview records with dates, forms, and responses |
+| **Courses** | All configured courses |
+| **Boards** | All boards and their members |
+| **Tracks** | All tracks with required courses and criteria |
+
+<Note>
+Sync is one-way: data flows from Credentials Portal to Google Sheets. Changes made in Google Sheets are not synced back.
+</Note>
+
+## Disconnect Google
+
+To revoke access, click **Disconnect** in the Google Sheets settings. This removes Credentials Portal's access to your Google account. Your existing spreadsheet and its data remain in Google Drive.
+
+[Screenshot: Disconnect button in the Google Sheets settings]
+
+## Sync frequency
+
+Syncing is manual — click **Sync Now** whenever you want to update the spreadsheet. There is no automatic/scheduled sync at this time.

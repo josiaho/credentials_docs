@@ -1,0 +1,161 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Credentials Portal",
+  "colors": {
+    "primary": "#6e5dec",
+    "light": "#8b7ef0",
+    "dark": "#5344c4"
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://app.credentialsportal.com"
+  },
+  "favicon": "/favicon.svg",
+  "topbarLinks": [
+    {
+      "name": "Sign In",
+      "url": "https://app.credentialsportal.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started Free",
+    "url": "https://app.credentialsportal.com"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Help",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "help/introduction",
+              "help/getting-started/signup",
+              "help/getting-started/login",
+              "help/getting-started/onboarding"
+            ]
+          },
+          {
+            "group": "Your Account",
+            "pages": [
+              "help/profile/edit-profile",
+              "help/profile/notification-preferences"
+            ]
+          },
+          {
+            "group": "Messaging",
+            "pages": [
+              "help/messaging/conversations",
+              "help/messaging/broadcasts"
+            ]
+          },
+          {
+            "group": "Files & Uploads",
+            "pages": [
+              "help/files/uploads"
+            ]
+          },
+          {
+            "group": "For Admins",
+            "pages": [
+              "help/admin/overview",
+              "help/admin/people",
+              "help/admin/roles",
+              "help/admin/settings",
+              "help/admin/tracks-courses",
+              "help/admin/interview-forms",
+              "help/admin/google-sheets",
+              "help/admin/data-management",
+              "help/admin/billing",
+              "help/admin/api-keys"
+            ]
+          },
+          {
+            "group": "For Board Members",
+            "pages": [
+              "help/board-members/overview",
+              "help/board-members/interviews",
+              "help/board-members/audio"
+            ]
+          },
+          {
+            "group": "For Mentors",
+            "pages": [
+              "help/mentors/overview",
+              "help/mentors/candidates"
+            ]
+          },
+          {
+            "group": "For Candidates",
+            "pages": [
+              "help/candidates/overview",
+              "help/candidates/interviews",
+              "help/candidates/progress"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "api/overview",
+              "api/authentication"
+            ]
+          },
+          {
+            "group": "People",
+            "pages": [
+              "api/people"
+            ]
+          },
+          {
+            "group": "Interviews",
+            "pages": [
+              "api/interviews"
+            ]
+          },
+          {
+            "group": "Communication",
+            "pages": [
+              "api/messages",
+              "api/broadcasts"
+            ]
+          },
+          {
+            "group": "Files",
+            "pages": [
+              "api/files"
+            ]
+          },
+          {
+            "group": "District",
+            "pages": [
+              "api/district"
+            ]
+          },
+          {
+            "group": "Tools",
+            "pages": [
+              "api/audio",
+              "api/translate",
+              "api/keys"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footerSocials": {},
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true
+  },
+  "search": {
+    "prompt": "Search help articles..."
+  }
+}

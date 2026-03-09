@@ -1,0 +1,62 @@
+---
+title: API Keys
+description: Create and manage API keys for programmatic access to your district's data.
+---
+
+API keys let external tools, scripts, or integrations access your district's data via the Credentials Portal API without requiring a user login session.
+
+[Screenshot: API Keys settings page showing a list of keys with their names, scopes, and last-four-digit hints]
+
+## Create an API key
+
+<Steps>
+  <Step title="Go to Settings → API Keys">
+    [Screenshot: Settings navigation with API Keys highlighted]
+  </Step>
+  <Step title="Click + Create API Key">
+    Enter a descriptive name for the key (e.g., "Google Sheets Script", "Reporting Tool").
+
+    [Screenshot: Create API Key form with name field and scope checkboxes]
+  </Step>
+  <Step title="Select scopes">
+    Choose what the key is allowed to do:
+
+    | Scope | Access granted |
+    |-------|---------------|
+    | `read:people` | Read people records |
+    | `write:people` | Create and update people |
+    | `read:interviews` | Read interview records |
+    | `write:interviews` | Create and update interviews |
+
+    Grant only the scopes your integration needs.
+  </Step>
+  <Step title="Copy the key">
+    The full API key is shown **once** immediately after creation. Copy it and store it securely — you won't be able to see it again.
+
+    [Screenshot: API key creation success screen with the key highlighted and a copy button]
+  </Step>
+</Steps>
+
+<Warning>
+Treat API keys like passwords. Never share them publicly or commit them to source control.
+</Warning>
+
+## Revoke an API key
+
+To revoke a key, click the delete icon next to it in the API Keys list. Revoked keys stop working immediately.
+
+## Using API keys
+
+Include your API key in the `Authorization` header of all API requests:
+
+```http
+Authorization: Bearer ck_your_api_key_here
+```
+
+See the [API Reference](/api/overview) for full documentation on available endpoints.
+
+## Best practices
+
+- Create a separate key for each integration so you can revoke one without affecting others
+- Use the minimum scopes required for each key
+- Rotate keys periodically or immediately if you suspect a key has been compromised

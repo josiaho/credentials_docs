@@ -1,0 +1,107 @@
+---
+title: Interview Forms & Boards
+description: Configure interview forms, boards, and interview profiles for your district.
+---
+
+Credentials Portal structures interviews around three configurable components:
+
+- **Forms** — The questions and fields filled out during an interview
+- **Boards** — The committees or groups that conduct interviews
+- **Interview Profiles** — Templates that combine a form with settings for a specific interview type
+
+[Screenshot: Interview Forms settings page showing the default Post-Interview Form for Board with its fields listed]
+
+## Interview forms
+
+### Default form
+Your district includes a pre-configured **Post-Interview Form for Board** with the following fields:
+- Committee recommendation (dropdown: Recommend / Do not recommend)
+- What excited the committee about the candidate (long text)
+- What the candidate should work on (long text)
+- Private board notes (long text, admin-only)
+- File attachments
+- Quiz completed (checkbox)
+
+### Add a form
+<Steps>
+  <Step title="Go to Settings → Interview Forms">
+    [Screenshot: Settings navigation with Interview Forms highlighted]
+  </Step>
+  <Step title="Click + Add Form">
+    Enter a name for the form.
+  </Step>
+  <Step title="Add fields">
+    Click **+ Add Field** for each question. For each field, choose:
+    - **Label** — The question text
+    - **Field type**:
+      - Short text
+      - Long text
+      - Checkbox
+      - Select (dropdown with configurable options)
+      - File attachment
+    - **Private** — Check this to make the field visible to admins only (hidden from candidates and mentors)
+
+    [Screenshot: Field editor with type selector, label input, and private toggle]
+  </Step>
+  <Step title="Reorder fields">
+    Drag fields into the order you want them to appear during interviews.
+  </Step>
+  <Step title="Save">
+    Click **Save Form**.
+  </Step>
+</Steps>
+
+### Edit or delete a form
+Click any form to edit its fields. To delete, click **Delete Form**.
+
+<Note>
+Deleting a form removes it from any interview profiles that reference it. Existing interview records retain their response data.
+</Note>
+
+## Boards
+
+Boards represent the credential committees in your district. Board members are assigned to boards and can view and fill out interviews for candidates who appear before their board.
+
+### Default board
+Your district starts with a **Credentials Board**. You can rename it or add additional boards.
+
+### Add a board
+<Steps>
+  <Step title="Go to Settings → Boards">
+  </Step>
+  <Step title="Click + Add Board">
+    Enter the board's name.
+  </Step>
+  <Step title="Add board members">
+    Select people from your district to assign as members of this board. Only people with a Board-type role can be assigned.
+
+    [Screenshot: Board member selector showing a list of people with Board roles]
+  </Step>
+  <Step title="Save">
+    Click **Save Board**.
+  </Step>
+</Steps>
+
+## Interview profiles
+
+Interview profiles are reusable templates that combine a form with specific settings for an interview type. When creating a new interview, you select which profile to use.
+
+### Default profile
+Your district has one default interview profile that uses the default board form.
+
+### Configure a profile
+Each profile has the following settings:
+
+| Setting | Description |
+|---------|-------------|
+| **Name** | Profile name (e.g., "Initial Board Interview") |
+| **Form** | Which interview form to use |
+| **Who can create** | Whether admins and/or mentors can create interviews using this profile |
+| **Who can edit responses** | Which roles can fill in the interview form |
+| **Allow audio** | Whether audio recording is enabled |
+| **Allow file attachments** | Whether files can be attached |
+| **Allow summary** | Whether a freeform summary field is shown |
+
+[Screenshot: Interview profile configuration form showing all settings]
+
+To create a new profile, go to **Settings → Interview Profiles** and click **+ Add Profile**.

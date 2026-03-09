@@ -1,0 +1,109 @@
+---
+title: Translation
+description: Translate text into 90+ languages and list supported languages via the API.
+---
+
+The translation endpoints let you translate text using AI (powered by Meta's M2M-100 model via Workers AI). Translations are cached to avoid redundant processing.
+
+## Translate text
+
+```bash
+POST /api/translate
+```
+
+Translates one or more strings into a target language.
+
+**Request body:**
+
+<ParamField body="text" type="string | array">
+  A single string or an array of strings to translate. Maximum 200 strings per request.
+</ParamField>
+
+<ParamField body="target" type="string" required>
+  BCP 47 language code of the target language (e.g., `"es"`, `"fr"`, `"pt"`)
+</ParamField>
+
+<ParamField body="source" type="string">
+  BCP 47 language code of the source language. If omitted, the source is detected automatically.
+</ParamField>
+
+**Example — translate a single string:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/translate \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Welcome to Credentials Portal",
+    "target": "es"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "translated": "Bienvenido al Portal de Credenciales"
+}
+```
+
+**Example — translate multiple strings:**
+
+```bash
+curl -X POST https://app.credentialsportal.com/api/translate \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": ["Hello", "Goodbye", "Thank you"],
+    "target": "fr"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "translated": ["Bonjour", "Au revoir", "Merci"]
+}
+```
+
+---
+
+## List supported languages
+
+```bash
+GET /api/translate/languages
+```
+
+Returns a list of all supported languages with their BCP 47 language codes and display names.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/translate/languages \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+[
+  { "code": "en", "name": "English" },
+  { "code": "es", "name": "Spanish" },
+  { "code": "fr", "name": "French" },
+  { "code": "pt", "name": "Portuguese" },
+  { "code": "de", "name": "German" },
+  { "code": "zh", "name": "Chinese" },
+  "..."
+]
+```
+
+90+ languages are supported. Use the `/api/translate/languages` endpoint to get the complete list.
+
+---
+
+## Translation in messages
+
+Message translation happens automatically — when a user reads a conversation, each message is translated into their language on the fly. You don't need to call the translation endpoint yourself for messaging.
+
+The `POST /api/translate` endpoint is useful for translating other content — such as custom field values, course names, or external data you're importing.

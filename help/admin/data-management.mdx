@@ -1,0 +1,56 @@
+---
+title: Data Management
+description: Bulk delete data in your district to clean up test records or reset specific data types.
+---
+
+The Data Management tools let you bulk delete specific categories of data from your district. This is most useful for clearing out test data after initial setup, or for removing outdated records.
+
+[Screenshot: Data Management settings page with data type options and delete buttons]
+
+## Access Data Management
+
+Go to **Settings → Data Management**.
+
+<Warning>
+All deletions in this section are **permanent and cannot be undone**. Export your data to Google Sheets first if you need a backup.
+</Warning>
+
+## Deletable data types
+
+| Type | What gets deleted |
+|------|------------------|
+| **People** | All people records (except the current admin) |
+| **Interviews** | All interview records and their responses |
+| **Files** | All uploaded files (documents, attachments) |
+| **Roles** | All custom roles (default roles are restored) |
+| **Tags** | All tags (removed from people too) |
+| **Boards** | All board configurations |
+| **Tracks** | All track configurations |
+| **Courses** | All course records |
+
+## Delete a data type
+
+<Steps>
+  <Step title="Go to Settings → Data Management">
+  </Step>
+  <Step title="Choose the data type">
+    Select the type of data you want to delete.
+  </Step>
+  <Step title="Confirm deletion">
+    Type the confirmation phrase shown on screen and click **Delete**. This step cannot be undone.
+
+    [Screenshot: Confirmation dialog with a text input requiring you to type "delete" to confirm]
+  </Step>
+</Steps>
+
+## Before you delete
+
+We recommend:
+
+1. **Export to Google Sheets** — Run a sync from [Google Sheets Integration](/help/admin/google-sheets) to save a copy of your current data
+2. **Confirm scope** — Be sure you're targeting the right data type; there's no undo
+3. **Notify your team** — Let board members, mentors, and candidates know before deleting shared data
+
+## After deleting people
+
+If you delete all people, you will remain as the only person in the district (the currently logged-in admin is preserved). You'll need to re-add and re-invite everyone.

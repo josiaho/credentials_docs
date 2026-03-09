@@ -1,0 +1,140 @@
+---
+title: District
+description: Retrieve and update your district's settings and configuration via the API.
+---
+
+The district endpoint gives you access to your district's configuration — name, accent color, supported languages, and the full settings object.
+
+## Get district
+
+```bash
+GET /api/district
+```
+
+Returns your district's configuration and settings.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/district \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{
+  "id": "xyz99",
+  "name": { "en": "Pacific Northwest District" },
+  "accent": "#6e5dec",
+  "languages": ["en", "es"],
+  "billing_plan": "pro",
+  "trial_ends_at": null,
+  "settings": {
+    "r": {
+      "r": {
+        "1a": { "n": { "en": "Admin" }, "p": 2, "g": 1, "i": 2, "s": 1, "r": 1, "B": 1 },
+        "1b": { "n": { "en": "Mentor" }, "m": 1 },
+        "1c": { "n": { "en": "Candidate" }, "c": 1 },
+        "1d": { "n": { "en": "Credentials Board" }, "i": 2, "b": { "1a": 1 } }
+      },
+      "o": ["1a", "1d", "1b", "1c"]
+    },
+    "t": {
+      "t": {
+        "1a": {
+          "n": { "en": "Ministerial Track" },
+          "y": 3,
+          "c": ["1a", "1b", "1c"],
+          "a": 1
+        }
+      },
+      "o": ["1a"]
+    },
+    "b": {
+      "b": {
+        "1a": { "n": { "en": "Credentials Board" }, "m": {} }
+      }
+    }
+  },
+  "created_at": 1709942400000
+}
+```
+
+---
+
+## Update district
+
+```bash
+PATCH /api/district
+```
+
+Requires the **Settings** permission (`s: 1`).
+
+Update your district's name, accent color, supported languages, or settings blob.
+
+**Request body:**
+
+<ParamField body="name" type="object">
+  Multilingual district name: `{ "en": "My District" }`
+</ParamField>
+
+<ParamField body="accent" type="string">
+  Hex color code for the district accent (e.g., `"#6e5dec"`)
+</ParamField>
+
+<ParamField body="languages" type="array">
+  Array of BCP 47 language codes supported by the district (e.g., `["en", "es"]`)
+</ParamField>
+
+<ParamField body="settings" type="object">
+  Partial settings object. Merged with existing settings — only keys you include are updated.
+</ParamField>
+
+**Example — update district name and accent:**
+
+```bash
+curl -X PATCH https://app.credentialsportal.com/api/district \
+  -H "Authorization: Bearer ck_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": { "en": "Pacific Northwest District" },
+    "accent": "#3b82f6"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "xyz99",
+  "name": { "en": "Pacific Northwest District" },
+  "accent": "#3b82f6",
+  "languages": ["en"],
+  "settings": { ... }
+}
+```
+
+---
+
+## Settings structure
+
+The `settings` object contains all district configuration. Key top-level keys:
+
+| Key | Contents |
+|-----|---------|
+| `r` | Roles (`r.r` = role definitions, `r.o` = display order) |
+| `T` | Tags |
+| `b` | Boards |
+| `fo` | Interview forms |
+| `i` | Interview profiles |
+| `c` | Courses |
+| `t` | Tracks |
+| `F` | Custom fields per role |
+| `d` | Dashboard layout |
+| `l` | District contact links |
+| `gs` | Google Sheets configuration |
+
+<Note>
+The settings structure uses short keys for storage efficiency. Refer to the app's Settings UI for a human-readable view of what each key controls.
+</Note>
