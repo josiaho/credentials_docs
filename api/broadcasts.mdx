@@ -1,9 +1,9 @@
 ---
 title: Broadcasts
-description: Send district-wide announcements to role groups via the API.
+description: Send district-wide announcements to specific people via the API.
 ---
 
-Broadcasts are one-way announcements sent to all people with a specific role. Recipients are notified via email and push notification (based on their preferences).
+Broadcasts are one-way announcements sent to an explicit list of recipients. Recipients are notified via email and push notification (based on their preferences).
 
 <Note>
 Requires the **Broadcasts** permission (`g: 1`) on the caller's role.
@@ -15,7 +15,7 @@ Requires the **Broadcasts** permission (`g: 1`) on the caller's role.
 GET /api/broadcasts
 ```
 
-Returns all broadcasts sent from your district, most recent first.
+Returns the 50 most recent broadcasts sent from your district, most recent first.
 
 **Example:**
 
@@ -27,19 +27,24 @@ curl https://app.credentialsportal.com/api/broadcasts \
 **Response:**
 
 ```json
-[
-  {
-    "id": "brd01",
-    "district_id": "xyz99",
-    "sender_id": "abc12",
-    "role_id": "1c",
-    "subject": "District Assembly Reminder",
-    "body": "<p>Please join us for District Assembly on March 15...</p>",
-    "recipient_count": 12,
-    "created_at": 1741564800000
-  }
-]
+{
+  "broadcasts": [
+    {
+      "id": "brd01",
+      "subject": "District Assembly Reminder",
+      "body": "<p>Please join us for District Assembly on March 15...</p>",
+      "sender_id": "abc12",
+      "sender_name": "Jane Doe",
+      "recipient_ids": ["def34", "ghi56"],
+      "sent_count": 12,
+      "opened_count": 7,
+      "created_at": 1741564800000
+    }
+  ]
+}
 ```
+
+`opened_count` is `null` for broadcasts sent before open tracking was enabled.
 
 ---
 
@@ -51,8 +56,8 @@ POST /api/broadcasts
 
 **Request body:**
 
-<ParamField body="role_id" type="string" required>
-  The role ID of the recipients. All people assigned this role will receive the broadcast.
+<ParamField body="recipientIds" type="array" required>
+  An array of person IDs to send the broadcast to. The sender is automatically excluded.
 </ParamField>
 
 <ParamField body="subject" type="string" required>
@@ -70,7 +75,7 @@ curl -X POST https://app.credentialsportal.com/api/broadcasts \
   -H "Authorization: Bearer ck_your_api_key" \
   -H "Content-Type: application/json" \
   -d '{
-    "role_id": "1c",
+    "recipientIds": ["def34", "ghi56", "jkl78"],
     "subject": "Interview Schedule Update",
     "body": "<p>Board interviews are scheduled for April 5. Please confirm your attendance.</p>"
   }'
@@ -80,16 +85,42 @@ curl -X POST https://app.credentialsportal.com/api/broadcasts \
 
 ```json
 {
+  "ok": true,
   "id": "brd02",
-  "district_id": "xyz99",
-  "sender_id": "abc12",
-  "role_id": "1c",
-  "subject": "Interview Schedule Update",
-  "body": "<p>Board interviews are scheduled for April 5. Please confirm your attendance.</p>",
-  "recipient_count": 8,
-  "created_at": 1741564800000
+  "sent": 3
 }
 ```
+
+Email and push delivery happen in the background after the response is returned. `sent` reflects the number of unique recipients (excluding the sender).
+
+---
+
+## Get broadcast stats
+
+```bash
+GET /api/broadcasts/:id/stats
+```
+
+Returns open and delivery statistics for a broadcast, sourced from email delivery tracking. Stats are cached and may be up to a few minutes old for recent broadcasts.
+
+**Example:**
+
+```bash
+curl https://app.credentialsportal.com/api/broadcasts/brd02/stats \
+  -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{
+  "opened": 5,
+  "delivered": 10,
+  "checkedAt": 1741564800000
+}
+```
+
+`opened` and `delivered` are `null` if tracking data isn't available for the broadcast. A `cached: true` field is included when the response was served from cache.
 
 ---
 
@@ -99,11 +130,28 @@ curl -X POST https://app.credentialsportal.com/api/broadcasts \
 GET /api/broadcasts/people/:id
 ```
 
-Returns all broadcasts received by a specific person.
+Returns the 20 most recent broadcasts received by a specific person. Requires admin permissions, or the person themselves.
 
 **Example:**
 
 ```bash
 curl https://app.credentialsportal.com/api/broadcasts/people/def34 \
   -H "Authorization: Bearer ck_your_api_key"
+```
+
+**Response:**
+
+```json
+{
+  "broadcasts": [
+    {
+      "id": "brd01",
+      "subject": "District Assembly Reminder",
+      "body": "<p>Please join us for District Assembly on March 15...</p>",
+      "sender_id": "abc12",
+      "sender_name": "Jane Doe",
+      "created_at": 1741564800000
+    }
+  ]
+}
 ```

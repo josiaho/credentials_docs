@@ -1,6 +1,6 @@
 ---
 title: Translation
-description: Translate text into 90+ languages and list supported languages via the API.
+description: Translate text into 70+ languages and list supported languages via the API.
 ---
 
 The translation endpoints let you translate text using AI (powered by Meta's M2M-100 model via Workers AI). Translations are cached to avoid redundant processing.
@@ -15,16 +15,20 @@ Translates one or more strings into a target language.
 
 **Request body:**
 
-<ParamField body="text" type="string | array">
-  A single string or an array of strings to translate. Maximum 200 strings per request.
+<ParamField body="text" type="string">
+  A single string to translate. Use `texts` instead for batch mode.
 </ParamField>
 
-<ParamField body="target" type="string" required>
+<ParamField body="texts" type="array">
+  An array of strings to translate. Maximum 200 strings per request. Use this for batch mode instead of `text`.
+</ParamField>
+
+<ParamField body="to" type="string" required>
   BCP 47 language code of the target language (e.g., `"es"`, `"fr"`, `"pt"`)
 </ParamField>
 
-<ParamField body="source" type="string">
-  BCP 47 language code of the source language. If omitted, the source is detected automatically.
+<ParamField body="from" type="string">
+  BCP 47 language code of the source language. Defaults to `"en"` if omitted.
 </ParamField>
 
 **Example — translate a single string:**
@@ -35,7 +39,7 @@ curl -X POST https://app.credentialsportal.com/api/translate \
   -H "Content-Type: application/json" \
   -d '{
     "text": "Welcome to Credentials Portal",
-    "target": "es"
+    "to": "es"
   }'
 ```
 
@@ -43,7 +47,9 @@ curl -X POST https://app.credentialsportal.com/api/translate \
 
 ```json
 {
-  "translated": "Bienvenido al Portal de Credenciales"
+  "translated": "Bienvenido al Portal de Credenciales",
+  "from": "en",
+  "to": "es"
 }
 ```
 
@@ -54,8 +60,8 @@ curl -X POST https://app.credentialsportal.com/api/translate \
   -H "Authorization: Bearer ck_your_api_key" \
   -H "Content-Type: application/json" \
   -d '{
-    "text": ["Hello", "Goodbye", "Thank you"],
-    "target": "fr"
+    "texts": ["Hello", "Goodbye", "Thank you"],
+    "to": "fr"
   }'
 ```
 
@@ -63,7 +69,9 @@ curl -X POST https://app.credentialsportal.com/api/translate \
 
 ```json
 {
-  "translated": ["Bonjour", "Au revoir", "Merci"]
+  "translated": ["Bonjour", "Au revoir", "Merci"],
+  "from": "en",
+  "to": "fr"
 }
 ```
 
@@ -75,7 +83,7 @@ curl -X POST https://app.credentialsportal.com/api/translate \
 GET /api/translate/languages
 ```
 
-Returns a list of all supported languages with their BCP 47 language codes and display names.
+Returns all supported languages with their BCP 47 codes and display names (in both English and the native script).
 
 **Example:**
 
@@ -87,18 +95,19 @@ curl https://app.credentialsportal.com/api/translate/languages \
 **Response:**
 
 ```json
-[
-  { "code": "en", "name": "English" },
-  { "code": "es", "name": "Spanish" },
-  { "code": "fr", "name": "French" },
-  { "code": "pt", "name": "Portuguese" },
-  { "code": "de", "name": "German" },
-  { "code": "zh", "name": "Chinese" },
-  "..."
-]
+{
+  "languages": {
+    "en": ["English", "English"],
+    "es": ["Spanish", "Español"],
+    "fr": ["French", "Français"],
+    "pt": ["Portuguese", "Português"],
+    "de": ["German", "Deutsch"],
+    "zh": ["Chinese", "中文"]
+  }
+}
 ```
 
-90+ languages are supported. Use the `/api/translate/languages` endpoint to get the complete list.
+Each entry is an array of `[englishName, nativeName]`. 70+ languages are supported.
 
 ---
 
